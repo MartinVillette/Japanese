@@ -2,10 +2,13 @@ package com.example.japanese
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -19,6 +22,16 @@ class MainActivity : BaseActivity() {
 
     override fun onUserLoggedIn() {
         setContentView(R.layout.activity_main)
+
+        val logoutButton = findViewById<Button>(R.id.logOutButton)
+        val auth = Firebase.auth
+        logoutButton.setOnClickListener {
+            auth.signOut()
+            finish()
+        }
+    }
+
+    private fun groqRequest(){
 
         val url = "https://api.groq.com/openai/v1/chat/completions"
         val userPrompt = "What is your favorite color ?"

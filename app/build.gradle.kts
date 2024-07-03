@@ -43,6 +43,8 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -50,5 +52,7 @@ dependencies {
     //Added libraries
     implementation("com.squareup.okhttp3:okhttp:4.11.0") // For HTTP requests
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0") // For request logging (optional)
-    implementation("com.google.android.gms.auth.api.identity")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("com.google.android.material:material:1.9.0")
+
 }

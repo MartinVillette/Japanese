@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_image_1"
-    tools:context=".lesson.LessonActivity">
+    tools:context=".lesson.userLesson.LessonActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

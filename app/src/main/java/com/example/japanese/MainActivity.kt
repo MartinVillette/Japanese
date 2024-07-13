@@ -1,29 +1,18 @@
 package com.example.japanese
 
 import android.content.Intent
-import android.graphics.RenderEffect
-import android.graphics.Shader
-import android.graphics.drawable.Drawable
-import android.os.Build
-import android.util.Log
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.japanese.chat.ChatActivity
-import com.example.japanese.lesson.EditLessonActivity
-import com.example.japanese.lesson.Lesson
-import com.example.japanese.lesson.LessonsAdapter
-import com.example.japanese.minnaNoNihongo.ChaptersActivity
+import com.example.japanese.lesson.userLesson.EditLessonActivity
+import com.example.japanese.lesson.userLesson.Lesson
+import com.example.japanese.lesson.userLesson.LessonsAdapter
+import com.example.japanese.lesson.minnaNoNihongoLesson.ChaptersActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.IOException
 
 class MainActivity : BaseActivity() {
 

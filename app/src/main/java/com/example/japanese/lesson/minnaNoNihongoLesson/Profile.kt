@@ -1,6 +1,6 @@
-package com.example.japanese.minnaNoNihongo
+package com.example.japanese.lesson.minnaNoNihongoLesson
 
-import com.example.japanese.lesson.LanguageItem
+import com.example.japanese.lesson.userLesson.LanguageItem
 
 class Profile (
     var id: String = "",

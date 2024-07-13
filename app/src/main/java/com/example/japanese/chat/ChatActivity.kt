@@ -2,8 +2,8 @@ package com.example.japanese.chat
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.japanese.R
 import com.example.japanese.authentication.User
-import com.example.japanese.lesson.LanguageItem
-import com.example.japanese.lesson.Lesson
-import com.example.japanese.minnaNoNihongo.MinnaNoNihongoLesson
+import com.example.japanese.lesson.userLesson.LanguageItem
+import com.example.japanese.lesson.userLesson.Lesson
+import com.example.japanese.lesson.minnaNoNihongoLesson.MinnaNoNihongoLesson
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -96,6 +96,11 @@ class ChatActivity : AppCompatActivity(), ChatAi.AiCallback  {
             if (message.isNotEmpty()) {
                 sendMessage(message)
             }
+        }
+
+        val backButton = findViewById<ImageButton>(R.id.backButton)
+        backButton.setOnClickListener {
+            finish()
         }
     }
 

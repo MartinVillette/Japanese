@@ -1,4 +1,4 @@
-package com.example.japanese.lesson
+package com.example.japanese.lesson.userLesson
 
 class LanguageItem (
     var word: String="",

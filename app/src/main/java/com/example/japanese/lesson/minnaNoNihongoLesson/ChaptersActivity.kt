@@ -1,4 +1,4 @@
-package com.example.japanese.minnaNoNihongo
+package com.example.japanese.lesson.minnaNoNihongoLesson
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -9,9 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.japanese.R
 import com.example.japanese.authentication.User
-import com.example.japanese.lesson.ChapterAdapter
-import com.example.japanese.lesson.Lesson
-import com.example.japanese.lesson.LessonsAdapter
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore

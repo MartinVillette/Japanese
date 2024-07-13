@@ -1,4 +1,4 @@
-package com.example.japanese.lesson
+package com.example.japanese.lesson.userLesson
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -22,7 +22,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.japanese.R
 import com.example.japanese.lesson.ai.SuggestionAi
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore

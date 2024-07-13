@@ -1,4 +1,4 @@
-package com.example.japanese.lesson
+package com.example.japanese.lesson.userLesson
 
 import android.content.Context
 import android.content.Intent
@@ -9,11 +9,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.japanese.R
-import com.example.japanese.minnaNoNihongo.ChapterActivity
-import com.example.japanese.minnaNoNihongo.ChaptersActivity
 
-class ChapterAdapter(private var lessons: List<Int>) :
-    RecyclerView.Adapter<ChapterAdapter.LessonViewHolder>() {
+class LessonsAdapter(private var lessons: List<Lesson>) :
+    RecyclerView.Adapter<LessonsAdapter.LessonViewHolder>() {
 
     class LessonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val parentContext: Context = itemView.context
@@ -32,12 +30,12 @@ class ChapterAdapter(private var lessons: List<Int>) :
     }
 
     override fun onBindViewHolder(holder: LessonViewHolder, position: Int) {
-        val chapter: String = lessons[position].toString()
-        holder.lessonNameTextView.text = chapter
+        val lesson = lessons[position]
+        holder.lessonNameTextView.text = lesson.name
         holder.lessonLayout.setOnClickListener {
             // Handle lesson click event
-            val intent = Intent(holder.parentContext, ChapterActivity::class.java)
-            intent.putExtra("chapter", chapter)
+            val intent = Intent(holder.parentContext, LessonActivity::class.java)
+            intent.putExtra("lessonId", lesson.id)
             holder.parentContext.startActivity(intent)
         }
         // ... bind other fields (e.g., lessonDescription, image using Glide)

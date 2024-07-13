@@ -14,27 +14,30 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-        <Button
-            android:id="@+id/logOutButton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Log Out"
-            tools:ignore="MissingConstraints" />
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/chatButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Chat"
-            tools:ignore="MissingConstraints" />
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:background="@null"
+                android:src="@drawable/ic_arrow_back_24dp"
+                app:tint="@color/white"/>
 
-        <Button
-            android:id="@+id/minnaNoNihongoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Minna No Nihongo"
-            tools:ignore="MissingConstraints" />
+            <TextView
+                android:id="@+id/lessonNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textColor="@color/white"
+                android:text="Minna No Nihongo Chapters"/>
 
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:text="Lessons"/>
+                android:text="Chapters"/>
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -56,19 +59,11 @@
                 android:layout_weight="1">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/lessonsRecyclerView"
+                    android:id="@+id/chaptersRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
             </ScrollView>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/newLessonButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:layout_gravity="bottom|end"
-                app:srcCompat="@drawable/ic_add_24dp"/>
 
         </LinearLayout>
 

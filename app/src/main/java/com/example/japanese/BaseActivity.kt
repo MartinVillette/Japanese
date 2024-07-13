@@ -2,8 +2,10 @@ package com.example.japanese
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.LinearLayout
+import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
-import com.example.japanese.authentification.SignInActivity
+import com.example.japanese.authentication.SignInActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -14,7 +16,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setContentView(R.layout.activity_base)
         auth = Firebase.auth
     }
 

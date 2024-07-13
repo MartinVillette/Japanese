@@ -1,4 +1,4 @@
-package com.example.japanese.authentification
+package com.example.japanese.authentication
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,7 +13,6 @@ import com.example.japanese.MainActivity
 import com.example.japanese.R
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 
 class SignInActivity : AppCompatActivity() {

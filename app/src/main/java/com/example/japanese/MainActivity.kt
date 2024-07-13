@@ -1,14 +1,23 @@
 package com.example.japanese
 
-import android.os.Bundle
+import android.content.Intent
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.util.Log
 import android.widget.Button
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.japanese.chat.ChatActivity
+import com.example.japanese.lesson.EditLessonActivity
+import com.example.japanese.lesson.Lesson
+import com.example.japanese.lesson.LessonsAdapter
+import com.example.japanese.minnaNoNihongo.ChaptersActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -18,70 +27,56 @@ import java.io.IOException
 
 class MainActivity : BaseActivity() {
 
-    private val GROQ_API_KEY = "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"
+    private val auth = Firebase.auth
+    private val db = Firebase.firestore
 
     override fun onUserLoggedIn() {
         setContentView(R.layout.activity_main)
 
         val logoutButton = findViewById<Button>(R.id.logOutButton)
-        val auth = Firebase.auth
         logoutButton.setOnClickListener {
             auth.signOut()
-            finish()
+            //finish()
         }
+
+        val chatButton = findViewById<Button>(R.id.chatButton)
+        chatButton.setOnClickListener {
+            val intent = Intent(this, ChatActivity::class.java)
+            startActivity(intent)
+        }
+
+        val minnaNoNihongoButton = findViewById<Button>(R.id.minnaNoNihongoButton)
+        minnaNoNihongoButton.setOnClickListener {
+            val intent = Intent(this, ChaptersActivity::class.java)
+            startActivity(intent)
+        }
+
+        val newLesson = findViewById<FloatingActionButton>(R.id.newLessonButton)
+        newLesson.setOnClickListener {
+            val intent = Intent(this, EditLessonActivity::class.java)
+            startActivity(intent)
+        }
+
+
+
+        updateLessonList()
     }
 
-    private fun groqRequest(){
+    private fun updateLessonList(){
+        val lessonsRecyclerView = findViewById<RecyclerView>(R.id.lessonsRecyclerView)
+        lessonsRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        val url = "https://api.groq.com/openai/v1/chat/completions"
-        val userPrompt = "What is your favorite color ?"
-
-        val jsonBody = JSONObject()
-        jsonBody.put("model", "llama3-70b-8192")
-        val messagesArray = JSONArray()
-        val userMessage = JSONObject()
-        userMessage.put("role", "user")
-        userMessage.put("content", userPrompt)
-
-        messagesArray.put(userMessage)
-
-        jsonBody.put("messages", messagesArray)
-
-        val requestBody = jsonBody.toString().toRequestBody("application/json".toMediaTypeOrNull())
-        val request = Request.Builder()
-            .url(url)
-            .addHeader("Authorization", "Bearer $GROQ_API_KEY")
-            .post(requestBody)
-            .build()
-
-        val okHttpClient = OkHttpClient()
-
-        okHttpClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                // Handle network errors
-                runOnUiThread {
-                    Log.e("API Error", "Error: ${e.message}")
+        val lessonList = ArrayList<Lesson>()
+        val lessonsAdapter = LessonsAdapter(lessonList)
+        lessonsRecyclerView.adapter = lessonsAdapter
+        auth.currentUser?.uid?.let { userId ->
+            db.collection("users").document(userId).collection("lessons")
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    val lessons = querySnapshot.toObjects(Lesson::class.java)
+                    lessonList.addAll(lessons)
+                    lessonsAdapter.notifyDataSetChanged()
                 }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val responseBody = response.body
-                if (response.isSuccessful && responseBody != null){
-                    // Handle successful response
-                    val responseJson = JSONObject(responseBody.string())
-                    val message = responseJson.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content")
-                    // Handle API response and update UI
-                    runOnUiThread {
-                        Log.d("API Response", message)
-                    }
-                } else {
-                    // Handle unsuccessful response
-                    runOnUiThread {
-                        Log.e("API Error", "Error: ${response.code}")
-                    }
-                    return
-                }
-            }
-        })
+        }
     }
 }

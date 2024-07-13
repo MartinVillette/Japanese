@@ -1,4 +1,4 @@
-package com.example.japanese.authentification
+package com.example.japanese.authentication
 
 import android.content.Intent
 import android.os.Bundle
@@ -103,7 +103,7 @@ class SignUpActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign-up success, update UI with the signed-in user's information
-                    val user = User(auth.currentUser!!.uid, email, password, firstName, lastName)
+                    val user = User(auth.currentUser!!.uid, email, firstName, lastName)
                     db.collection("users").document(user.id)
                         .set(user)
                         .addOnSuccessListener {

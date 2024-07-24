@@ -4,6 +4,6 @@ import com.example.japanese.lesson.userLesson.LanguageItem
 
 class Profile (
     var id: String = "",
-    var chapter:Int=1,
+    var chapter:String="1",
     var content: ArrayList<LanguageItem> = arrayListOf(),
 )

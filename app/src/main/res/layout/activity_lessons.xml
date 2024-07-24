@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundImage"
-    tools:context=".lesson.userLesson.LessonActivity">
+    tools:context=".lesson.userLesson.LessonsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,31 +35,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:textColor="@color/white"
-                android:text="Title"/>
+                android:text=""/>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/quizButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Quiz"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Translate"/>
-
-        </LinearLayout>
-
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,11 +47,10 @@
             android:background="@drawable/layout_background"
             android:backgroundTint="?attr/colorSurface">
 
-            <TextView
+            <com.google.android.material.search.SearchBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:text="Content"/>
+                android:hint="Search"/>
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -81,14 +58,22 @@
                 android:layout_weight="1">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/lessonContentRecyclerView"
+                    android:id="@+id/lessonsRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
             </ScrollView>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/newLessonButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:layout_gravity="bottom|end"
+                app:srcCompat="@drawable/ic_add_24dp"/>
+
         </LinearLayout>
+
     </LinearLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

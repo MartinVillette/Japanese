@@ -19,13 +19,27 @@ class QuizAi {
     }
 
     private val url = "https://api.groq.com/openai/v1/chat/completions"
-    private val AI_MODEL = "llama3-70b-8192"
+    private val AI_MODEL = "llama-3.1-405b-reasoning"
     private val GROQ_API_KEY = "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"
 
     private val AI_SYSTEM_EVALUATION = """                                                                                                                                                                                                                                                                                                                              
-        You are an AI that helps detect if a user is making a translation mistake or if they know their vocabulary. You will be given an input and a languageItem. A languageItem is a JSON object that contains a Japanese expression, its reading, and its meaning. Your task is to determine if the input is a correct translation of the meaning in the languageItem, meaning it is close to the expression or to the reading of languageItem. If the input is correct, return true. If the input contains mistakes, return false. Be careful with the parenthesis. Be smart about it.
-        INPUT: {"input":"INPUT_TEXT", "languageItem":{"expression":"EXPRESSION_IN_JAPANESE", "reading":"READING_IN_JAPANESE", "meaning":"MEANING_IN_THE_USER_LANGUAGE"}}
-        OUTPUT: true/false
+        You are an AI that helps detect if a user is making a translation mistake or if they know their vocabulary. You will be given an input and a languageItem. A languageItem is a JSON object that contains a Japanese expression, its reading, and its meaning. Your task is to determine if the input is a correct translation of the meaning in the languageItem. Specifically, you will compare the input to the expression and reading fields of the languageItem. Be aware that the input might have slight variations, such as missing or including parenthesis content.
+        Consider the following when making your determination:
+        - Ignore parenthesis in the expression and reading fields.
+        - Treat optional readings or expressions within parenthesis as valid.
+        - Ignore any spaces or punctuation when comparing the input.
+        - Account for common variations in Japanese expressions.
+        Return true if the input correctly matches the expression or the reading, disregarding the parenthesis and minor variations. Return false if the input contains mistakes, is empty or does not sufficiently match.
+        
+        INPUT :{
+                  "input": "INPUT_TEXT",
+                  "languageItem": {
+                    "expression": "EXPRESSION_IN_JAPANESE",
+                    "reading": "READING_IN_JAPANESE",
+                    "meaning": "MEANING_IN_THE_USER_LANGUAGE"
+                  }
+                }
+    OUTPUT : true/false
     """.trimIndent()
 
     fun isTranslationCorrect(input:String, languageItem: JSONObject, callback: EvaluationCallback ) {

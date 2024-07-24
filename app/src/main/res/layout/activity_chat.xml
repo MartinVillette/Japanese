@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".chat.ChatActivity"
-    android:background="@drawable/background_image_1">
+    android:background="?attr/backgroundImage">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,8 +46,7 @@
             android:orientation="vertical"
             android:background="@drawable/layout_background"
             android:backgroundTint="?attr/colorSurface"
-            android:padding="10dp"
-            android:layout_margin="10dp">
+            android:padding="10dp">
 
 
             <ScrollView
@@ -75,7 +74,8 @@
                     android:layout_weight="1"
                     android:hint="Type your message"
                     android:background="@drawable/layout_background"
-                    android:backgroundTint="@color/light_pink"
+                    android:backgroundTint="?attr/colorPrimaryContainer"
+                    android:textColor="?attr/colorOnPrimaryContainer"
                     android:padding="15dp"/>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton

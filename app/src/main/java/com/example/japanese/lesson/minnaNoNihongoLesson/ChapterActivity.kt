@@ -39,11 +39,8 @@ class ChapterActivity : AppCompatActivity() {
 
         val chapter = intent.getStringExtra("chapter")?:""
         if (chapter == ""){
-            val intent = Intent(this, ChaptersActivity::class.java)
-            startActivity(intent)
             finish()
         }
-
 
         val lessonNameTextView = findViewById<TextView>(R.id.lessonNameTextView)
 
@@ -78,7 +75,7 @@ class ChapterActivity : AppCompatActivity() {
                             val lesson = querySnapshot.toObject(MinnaNoNihongoLesson::class.java)
                             lesson?.let { l ->
                                 val profileRef = db.collection("users").document(userId).collection("profiles").document(chapter)
-                                val newProfile = Profile(profileRef.id, chapter.toInt(), l.content)
+                                val newProfile = Profile(profileRef.id, chapter, l.content)
                                 profileRef.set(newProfile)
                                 profile = newProfile
                             }

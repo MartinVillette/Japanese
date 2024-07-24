@@ -3,7 +3,17 @@
     <style name="Base.Theme.Japanese" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
+        <item name="colorSurface">@color/white_transparent</item>
+        <item name="backgroundImage">@drawable/cropped_background_image_day</item>
 
-    <style name="Theme.Japanese" parent="Base.Theme.Japanese" />
+        <item name="colorPrimaryContainer">@color/light_pink</item>
+        <item name="colorOnPrimaryContainer">@color/black</item>
+
+        <item name="colorSurfaceContainerLow">@color/light_pink</item>
+        <item name="colorOnSurface">@color/black</item>
+
+        <item name="drawingBackgroundColor">@color/white</item>
+        <item name="drawingColor">@color/black</item>
+
+    </style>
 </resources>

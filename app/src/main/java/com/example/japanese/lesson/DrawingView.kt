@@ -4,6 +4,7 @@ package com.example.japanese.lesson
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import com.google.mlkit.vision.digitalink.Ink
@@ -26,13 +27,19 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     private val minStrokeWidth = 5f
     private val maxStrokeWidth = 30f
 
+    private var touchBlocked = false
+
     init {
         setupPaint()
     }
 
     private fun setupPaint() {
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(com.example.japanese.R.attr.drawingColor, typedValue, true)
+        val drawingColor = typedValue.data
+
         currentPaint = Paint().apply {
-            color = Color.BLACK
+            color = drawingColor
             style = Paint.Style.STROKE
             strokeJoin = Paint.Join.ROUND
             strokeCap = Paint.Cap.ROUND
@@ -48,6 +55,8 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (touchBlocked) return true
+
         val x = event.x
         val y = event.y
 
@@ -123,4 +132,49 @@ class DrawingView(context: Context, attrs: AttributeSet) : View(context, attrs) 
     }
 
     fun getPaths(): List<Pair<Path, Paint>> = paths
+
+    fun drawCheckSign() {
+        val centerX = width / 2f
+        val centerY = height / 2f
+        val size = minOf(width, height) * 0.4f
+
+        val checkPath = Path().apply {
+            moveTo(centerX - size * 0.3f, centerY)
+            lineTo(centerX - size * 0.1f, centerY + size * 0.3f)
+            lineTo(centerX + size * 0.4f, centerY - size * 0.3f)
+        }
+
+        val checkPaint = Paint(currentPaint).apply {
+            color = Color.GREEN
+            strokeWidth = baseStrokeWidth * 1.5f
+        }
+
+        paths.add(Pair(checkPath, checkPaint))
+        invalidate()
+    }
+
+    fun drawCrossSign() {
+        val centerX = width / 2f
+        val centerY = height / 2f
+        val size = minOf(width, height) * 0.3f
+
+        val crossPath = Path().apply {
+            moveTo(centerX - size, centerY - size)
+            lineTo(centerX + size, centerY + size)
+            moveTo(centerX + size, centerY - size)
+            lineTo(centerX - size, centerY + size)
+        }
+
+        val crossPaint = Paint(currentPaint).apply {
+            color = Color.RED
+            strokeWidth = baseStrokeWidth * 1.5f
+        }
+
+        paths.add(Pair(crossPath, crossPaint))
+        invalidate()
+    }
+
+    fun blockTouch(block: Boolean) {
+        touchBlocked = block
+    }
 }

@@ -19,13 +19,22 @@ class ChatAi {
     }
 
     private val url = "https://api.groq.com/openai/v1/chat/completions"
-    private val AI_MODEL = "llama3-70b-8192"
+    private val AI_MODEL = "llama-3.1-8b-instant"
     private val GROQ_API_KEY = "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"
 
     private val AI_SYSTEM_CHAT = """
-        You are a chatbot ai that talk with the user in Japanese. The goal is to make it train and familiar with the vocabulary he is learning. To do so, you will only speak with the japanese expression given in the language_tools in the input. If the user ask for explains in his language, then process and explain in the correct language. However speak the more as possible in japanese with the user's vocab. Don't user more vocabulary than the user has. You are also given the previous messages so that you can keep track of the conversation and of who said what. If the language_tools are limited or can't answer to the user, than use very basic Japanese to answer and make sure to add the translation between parentheses in French just after the new word. The answer must not be empty. If there is no previous_messages then you have to start the conversation.
-        INPUT : {"languages_tools":"THE_LANGUAGE_TOOLS_IN_JSON_FORMAT", "previous_messages":"THE_PREVIOUS_MESSAGES"} 
-        OUTPUT : {"message":"YOUR_MESSAGE"}
+        You are a chatbot AI that communicates with the user in Japanese. The goal is to help the user practice and become familiar with the vocabulary they are learning. Follow these guidelines:
+        1. Use only the Japanese expressions provided in the "language_tools" in the input.
+        2. Speak as much as possible in Japanese using the user's vocabulary.
+        3. If the user asks for explanations in their language, provide them in the correct language.
+        4. If you need to use words not in the lessons, provide the reading of the Japanese word as well as its translation in French in parentheses immediately after the new word.
+        5. Ensure that your responses are not empty.
+        
+        You will also be given previous messages to keep track of the conversation and know who said what. If there are no previous messages, you should start the conversation.
+        
+        INPUT: {"language_tools":"THE_LANGUAGE_TOOLS_IN_JSON_FORMAT", "previous_messages":"THE_PREVIOUS_MESSAGES"} 
+        OUTPUT: {"message":"YOUR_MESSAGE"}
+
     """.trimIndent()
 
     fun chat(message: String, languageItem:JSONArray, context: JSONArray, callback: AiCallback) {

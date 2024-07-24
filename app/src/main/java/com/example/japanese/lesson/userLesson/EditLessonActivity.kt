@@ -33,6 +33,7 @@ import org.json.JSONObject
 class EditLessonActivity : AppCompatActivity(), SuggestionAi.SuggestionCallback  {
 
     private lateinit var languageItemsContainer: LinearLayout
+    private lateinit var suggestionsLayout: LinearLayout
     private var languageItemsList = arrayListOf<LanguageItem>()
     private lateinit var lessonId: String
     private lateinit var  suggestionLayout: LinearLayout
@@ -51,10 +52,16 @@ class EditLessonActivity : AppCompatActivity(), SuggestionAi.SuggestionCallback 
             insets
         }
 
+
         languageItemsContainer = findViewById(R.id.languageItemsContainer)
         val newItemFAB = findViewById<FloatingActionButton>(R.id.newItemButton)
         newItemFAB.setOnClickListener {
             addLanguageItemClick()
+        }
+
+        val backButton = findViewById<ImageButton>(R.id.backButton)
+        backButton.setOnClickListener {
+            finish()
         }
 
         val saveLessonButton = findViewById<Button>(R.id.saveLessonButton)
@@ -84,22 +91,27 @@ class EditLessonActivity : AppCompatActivity(), SuggestionAi.SuggestionCallback 
         }
     }
 
-    override fun onSuccess(suggestion: String, expressionEditText: EditText,  readingEditText: EditText) {
+    override fun onSuccess(suggestions: JSONArray, expressionEditText: EditText,  readingEditText: EditText) {
         // Handle the successful response here
         runOnUiThread {
             // Update UI with the suggestion
-            Log.d("AiSuggestion", "Suggestion : $suggestion")
-            var expressionSuggestion = ""
-            var readingSuggestion = ""
-            try {
-                val jsonObject = JSONObject(suggestion)
-                expressionSuggestion = jsonObject.optString("suggested_expression", "")
-                readingSuggestion = jsonObject.optString("suggested_reading", "")
 
-                // Use the extracted values
-            } catch (_: JSONException) {}
-            expressionEditText.setText(expressionSuggestion)
-            readingEditText.setText(readingSuggestion)
+            for (i in 0 until suggestions.length()) {
+                val suggestion: JSONObject = suggestions.getJSONObject(i)
+                val expression: String = suggestion.getString("expression")
+                val reading: String = suggestion.getString("reading")
+
+                Log.d("AiSuggestion", "Expression: $expression, Reading: $reading")
+                val button = Button(this)
+                button.text = expression
+
+                // Set an OnClickListener for the button
+                button.setOnClickListener {
+                    expressionEditText.setText(expression)
+                    readingEditText.setText(reading)
+                }
+                suggestionsLayout.addView(button)
+            }
         }
     }
 
@@ -137,7 +149,7 @@ class EditLessonActivity : AppCompatActivity(), SuggestionAi.SuggestionCallback 
                     val lessonNameEditText = findViewById<EditText>(R.id.lessonNameEditText)
                     lessonNameEditText.setText(l.name)
                     for (languageItem in l.content){
-                        addLanguageItem(languageItem.word, languageItem.expression, languageItem.reading)
+                        addLanguageItem(languageItem.meaning, languageItem.expression, languageItem.reading)
                     }
                     callForNewWordSuggestion()
                 }
@@ -158,8 +170,9 @@ class EditLessonActivity : AppCompatActivity(), SuggestionAi.SuggestionCallback 
         val expressionEditText = popupView.findViewById<EditText>(R.id.expressionEditText)
         val readingEditText = popupView.findViewById<EditText>(R.id.readingEditText)
         val saveButton = popupView.findViewById<Button>(R.id.saveLanguageItemButton)
+        suggestionsLayout = popupView.findViewById(R.id.suggestionsLinearLayout)
 
-        wordEditText.setText(languageItem.word)
+        wordEditText.setText(languageItem.meaning)
         expressionEditText.setText(languageItem.expression)
         readingEditText.setText(languageItem.reading)
 
@@ -173,7 +186,7 @@ class EditLessonActivity : AppCompatActivity(), SuggestionAi.SuggestionCallback 
 
             languageItemView.findViewById<TextView>(R.id.wordTextView).text = newWord
             languageItemView.findViewById<TextView>(R.id.expressionTextView).text = newExpression
-            languageItem.word = newWord
+            languageItem.meaning = newWord
             languageItem.expression = newExpression
             languageItem.reading = newReading
 
@@ -183,7 +196,7 @@ class EditLessonActivity : AppCompatActivity(), SuggestionAi.SuggestionCallback 
         wordEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val newWord = s.toString()
-                languageItem.word = newWord
+                languageItem.meaning = newWord
                 callForSuggestion(newWord, expressionEditText, readingEditText)
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -307,8 +320,8 @@ class EditLessonActivity : AppCompatActivity(), SuggestionAi.SuggestionCallback 
         val tempList = ArrayList<LanguageItem>()
 
         for (languageItem in languageItemsList){
-            if (!(languageItem.word.isEmpty() && languageItem.expression.isEmpty())){
-                languageItem.word = languageItem.word.trim()
+            if (!(languageItem.meaning.isEmpty() && languageItem.expression.isEmpty())){
+                languageItem.meaning = languageItem.meaning.trim()
                 languageItem.expression = languageItem.expression.trim()
                 languageItem.reading = languageItem.reading.trim()
                 tempList.add(languageItem)
@@ -319,7 +332,7 @@ class EditLessonActivity : AppCompatActivity(), SuggestionAi.SuggestionCallback 
 
     private fun isLanguageItemsListValid(): Boolean {
         for (languageItem in languageItemsList) {
-            if (languageItem.word.isEmpty() || languageItem.expression.isEmpty()){
+            if (languageItem.meaning.isEmpty() || languageItem.expression.isEmpty()){
                 return false
             }
         }
@@ -330,7 +343,7 @@ class EditLessonActivity : AppCompatActivity(), SuggestionAi.SuggestionCallback 
         val context = JSONArray()
         for (languageItem in languageItemsList){
             val jsonObject = JSONObject()
-            jsonObject.put("word", languageItem.word)
+            jsonObject.put("meaning", languageItem.meaning)
             jsonObject.put("expression", languageItem.expression)
             jsonObject.put("reading", languageItem.reading)
             context.put(jsonObject)
@@ -349,9 +362,9 @@ class EditLessonActivity : AppCompatActivity(), SuggestionAi.SuggestionCallback 
     private fun callForSuggestion(word: String, expressionEditText: EditText, readingEditText: EditText) {
         val context = JSONArray()
         for (languageItem in languageItemsList){
-            if (languageItem.word != word){
+            if (languageItem.meaning != word){
                 val jsonObject = JSONObject()
-                jsonObject.put("word", languageItem.word)
+                jsonObject.put("meaning", languageItem.meaning)
                 jsonObject.put("expression", languageItem.expression)
                 jsonObject.put("reading", languageItem.reading)
                 context.put(jsonObject)

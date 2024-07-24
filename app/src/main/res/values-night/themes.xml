@@ -3,5 +3,17 @@
     <style name="Base.Theme.Japanese" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorSurface">@color/black_transparent</item>
+        <item name="backgroundImage">@drawable/cropped_background_image_night</item>
+
+        <item name="colorPrimaryContainer">@color/grey</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
+
+        <item name="colorSurfaceContainerLow">@color/grey</item>
+        <item name="colorOnSurface">@color/white</item>
+
+        <item name="drawingBackgroundColor">@color/grey</item>
+        <item name="drawingColor">@color/white</item>
+
     </style>
 </resources>

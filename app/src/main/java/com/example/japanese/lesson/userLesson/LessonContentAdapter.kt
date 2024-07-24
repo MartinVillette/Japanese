@@ -27,7 +27,7 @@ class LessonContentAdapter (private var lessonContent: List<LanguageItem>) :
 
     override fun onBindViewHolder(holder: LessonContentViewHolder, position: Int) {
         val languageItem = lessonContent[position]
-        holder.wordTextView.text = languageItem.word
+        holder.wordTextView.text = languageItem.meaning
         holder.expressionTextView.text = languageItem.expression
     }
 }

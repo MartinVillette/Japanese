@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="grey">#2C2C2C</color>
+    <color name="light_grey">#F0F0F0</color>">
+
     <color name="white">#FFFFFFFF</color>
     <color name="light_pink">#FFE9F3</color>
+
+    <color name="white_transparent">#B3FFFFFF</color>
+    <color name="black_transparent">#B3090909</color>
 </resources>

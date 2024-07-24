@@ -46,6 +46,7 @@ class ChatActivity : AppCompatActivity(), ChatAi.AiCallback  {
         chatAdapter = ChatAdapter(messages)
         chatRecyclerView.adapter = chatAdapter
 
+        /*
         auth.currentUser?.uid?.let { userId ->
             db.collection("users").document(userId).collection("lessons")
                 .get()
@@ -59,6 +60,7 @@ class ChatActivity : AppCompatActivity(), ChatAi.AiCallback  {
                     callForAiResponse()
                 }
         }
+         */
 
         auth.currentUser?.uid?.let { userId ->
             db.collection("users").document(userId)
@@ -81,9 +83,11 @@ class ChatActivity : AppCompatActivity(), ChatAi.AiCallback  {
                                     if (lesson != null){
                                         languageItems.addAll(lesson.content)
                                     }
+                                    if (chapter == minnaNoNihongo){
+                                        callForAiResponse()
+                                    }
                                 }
                         }
-                        callForAiResponse()
                     }
                 }
         }
@@ -133,7 +137,7 @@ class ChatActivity : AppCompatActivity(), ChatAi.AiCallback  {
         val items = JSONArray()
         for (languageItem in languageItems){
             val item = JSONObject()
-            item.put("word", languageItem.word)
+            item.put("meaning", languageItem.meaning)
             item.put("expression", languageItem.expression)
             item.put("reading", languageItem.reading)
             items.put(item)
@@ -145,6 +149,7 @@ class ChatActivity : AppCompatActivity(), ChatAi.AiCallback  {
             item.put("content", contextMessage.content)
             context.put(item)
         }
+        Log.d("AiSuggestion", "Context : $context")
         chatAI.chat(message, items, context,this)
     }
 }

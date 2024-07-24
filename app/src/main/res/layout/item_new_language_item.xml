@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -11,7 +12,7 @@
     android:paddingEnd="20dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
-    android:backgroundTint="@color/light_pink">
+    android:backgroundTint="?attr/colorPrimaryContainer">
 
     <TextView
         android:id="@+id/wordTextView"
@@ -19,8 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginEnd="10dp"
-        android:textColor="@color/black"
-        android:hint="Word"/>
+        android:textColor="?attr/colorOnPrimaryContainer"
+        android:hint="Word" />
 
     <TextView
         android:id="@+id/expressionTextView"
@@ -28,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginStart="10dp"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnPrimaryContainer"
         android:hint="Japanese" />
 
     <ImageButton
@@ -37,6 +38,7 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:src="@drawable/ic_delete_24dp"
-        android:background="@null"/>
+        android:background="@null"
+        app:tint="?attr/colorOnPrimaryContainer" />
 
 </LinearLayout>

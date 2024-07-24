@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomTheme">
+        <attr name="backgroundImage" format="reference" />
+        <attr name="drawingBackgroundColor" format="color" />
+        <attr name="drawingColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="CustomExtendedFab">
+        <attr name="customFabIcon" format="reference" />
+        <attr name="customFabText" format="string" />
+    </declare-styleable>
+</resources>

@@ -2,9 +2,14 @@ package com.example.japanese.lesson
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -42,13 +47,16 @@ class QuizActivity : AppCompatActivity(), QuizAi.EvaluationCallback  {
     private lateinit var currentLanguageItem: LanguageItem
     private var currentIndex: Int = 0
     private val quizAi = QuizAi()
-
-    private lateinit var user: User
+    private lateinit var title: String
     private lateinit var drawingView:DrawingView
+    private lateinit var correctionLayout:LinearLayout
+    private lateinit var nextButton: Button
     private lateinit var recognizer: DigitalInkRecognizer
     private lateinit var model: DigitalInkRecognitionModel
     private lateinit var inputEditText:EditText
     private val remoteModelManager: RemoteModelManager = RemoteModelManager.getInstance()
+
+    private val WAITING_TIME_MS = 1000L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +67,7 @@ class QuizActivity : AppCompatActivity(), QuizAi.EvaluationCallback  {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val lessonNameTextView = findViewById<TextView>(R.id.lessonNameTextView)
 
         val chapter = intent.getStringExtra("chapter")?:""
         val lessonId = intent.getStringExtra("lessonId")?:""
@@ -73,6 +82,8 @@ class QuizActivity : AppCompatActivity(), QuizAi.EvaluationCallback  {
                 .addOnSuccessListener { documentSnapshot ->
                     val profile = documentSnapshot.toObject(Profile::class.java)!!
                     languageItemList.addAll(profile.content)
+                    title = "Chapter ${profile.chapter}"
+                    lessonNameTextView.text = title
                     languageItemList.shuffle()
                     newQuiz()
                 }
@@ -82,18 +93,33 @@ class QuizActivity : AppCompatActivity(), QuizAi.EvaluationCallback  {
                 .get()
                 .addOnSuccessListener { documentSnapshot ->
                     val lesson = documentSnapshot.toObject(Lesson::class.java)!!
+                    title = lesson.name
+                    lessonNameTextView.text = title
                     languageItemList.addAll(lesson.content)
                     languageItemList.shuffle()
                     newQuiz()
                 }
         }
 
-        drawingView = findViewById(R.id.drawing_view)
+        drawingView = findViewById(R.id.drawingView)
+        correctionLayout = findViewById(R.id.correctionLayout)
         findViewById<FloatingActionButton>(R.id.undoButton).setOnClickListener { undo() }
         findViewById<FloatingActionButton>(R.id.clearButton).setOnClickListener { drawingView.clear() }
         findViewById<FloatingActionButton>(R.id.validateButton).setOnClickListener { recognizeCharacter() }
         findViewById<FloatingActionButton>(R.id.submitButton).setOnClickListener { submitQuiz() }
         inputEditText = findViewById(R.id.inputEditText)
+        nextButton = findViewById(R.id.nextButton)
+        nextButton.setOnClickListener {
+            drawingView.clear()
+            drawingView.blockTouch(false) // Unblock touch events
+            drawingView.visibility = View.VISIBLE
+            correctionLayout.visibility = View.GONE
+
+            currentIndex++
+            if (currentIndex < languageItemList.size) {
+                newQuiz()
+            }
+        }
 
         val modelIdentifier = DigitalInkRecognitionModelIdentifier.fromLanguageTag("ja")
 
@@ -123,16 +149,28 @@ class QuizActivity : AppCompatActivity(), QuizAi.EvaluationCallback  {
     }
 
     override fun onSuccess(isCorrect: Boolean) {
-        runOnUiThread{
-            if (isCorrect){
-                Toast.makeText(this, "Correct", Toast.LENGTH_SHORT).show()
+        runOnUiThread {
+            drawingView.clear()
+            drawingView.blockTouch(true) // Block touch events
+
+            if (isCorrect) {
+                drawingView.drawCheckSign()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    drawingView.clear()
+                    drawingView.blockTouch(false) // Unblock touch events
+
+                    currentIndex++
+                    if (currentIndex < languageItemList.size) {
+                        newQuiz()
+                    }
+                }, WAITING_TIME_MS)
             } else {
-                Toast.makeText(this, "Incorrect", Toast.LENGTH_SHORT).show()
+                drawingView.drawCrossSign()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    drawingView.visibility = View.GONE
+                    correctionLayout.visibility = View.VISIBLE
+                }, WAITING_TIME_MS)
             }
-        }
-        currentIndex++
-        if (currentIndex < languageItemList.size){
-            newQuiz()
         }
     }
 
@@ -166,8 +204,9 @@ class QuizActivity : AppCompatActivity(), QuizAi.EvaluationCallback  {
 
     private fun newQuiz(){
         currentLanguageItem = languageItemList[currentIndex]
-        val meaningTextView = findViewById<TextView>(R.id.meaningTextView)
-        meaningTextView.text = currentLanguageItem.word
+        findViewById<TextView>(R.id.meaningTextView).text = currentLanguageItem.meaning
+        findViewById<TextView>(R.id.expressionTextView).text = currentLanguageItem.expression
+        findViewById<TextView>(R.id.readingTextView).text = currentLanguageItem.reading
         inputEditText.setText("")
     }
 
@@ -176,7 +215,7 @@ class QuizActivity : AppCompatActivity(), QuizAi.EvaluationCallback  {
         val jsonLanguageItem = JSONObject()
         jsonLanguageItem.put("expression", currentLanguageItem.expression)
         jsonLanguageItem.put("reading", currentLanguageItem.reading)
-        jsonLanguageItem.put("meaning", currentLanguageItem.word)
+        jsonLanguageItem.put("meaning", currentLanguageItem.meaning)
         quizAi.isTranslationCorrect(text, jsonLanguageItem, this)
     }
 
@@ -232,16 +271,9 @@ class QuizActivity : AppCompatActivity(), QuizAi.EvaluationCallback  {
         editable.insert(start, text)
     }
 
-    private fun validateInput() {
-        val text = inputEditText.text.toString().trim()
-        if (text.isEmpty()) {
-            Toast.makeText(this, "Please enter a meaning", Toast.LENGTH_SHORT).show()
-            return
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         recognizer.close()
     }
+
 }
